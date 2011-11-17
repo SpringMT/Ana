@@ -1,0 +1,53 @@
+#!/usr/bin/perl
+use strict;
+use warnings;
+use Carp;
+use Getopt::Long;
+use Pod::Usage;
+
+use FindBin;
+use lib "$FindBin::Bin/../lib";
+use Ana;
+
+my $script = $ARGV[0];
+
+GetOptions(
+    'date=i'  => \my $date,
+    'start=i' => \my $start,
+    'end=i'   => \my $end,
+    'file=s'  => \my $file,
+    'help|h'  => \my $is_help,
+     man      => \my $is_man,
+);
+
+pod2usage(1) if ($is_help);
+podx2usage( -verbose => 2 ) if ($is_man);
+
+my $ana = Ana->new(+{
+    date   => $date,
+    start  => $start,
+    end    => $end,
+    file   => $file,
+});
+
+# 実行
+my $script_file = $ana->{config}->{script_dir} . $script;
+require $script_file;
+eval { batch($ana) };
+if ($@) {
+    print "$@";
+    my $backup_file = 'backup' . time();
+    my $backup = $ana->{config}->{backup_dir} . $backup_file;
+    print "backup:$backup\n";
+
+    open my $fh, '>>', $backup
+        or croak "cannot open $backup";
+
+    for my $data (@{$ana->{data}}) {
+        my $line = join("\t", @{$data});
+        $fh->print("$line\n");
+    }
+
+    close $fh;
+}
+
