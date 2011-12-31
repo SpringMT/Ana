@@ -2,7 +2,6 @@ package Ana::Output::DB;
 
 use strict;
 use warnings;
-use lib '/Users/haruyama.makoto/Ana/lib';
 use Carp;
 use SQL::Abstract;
 use SQL::Abstract::Plugin::InsertMulti;

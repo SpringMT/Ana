@@ -34,6 +34,8 @@ my $ana = Ana->new(+{
 my $script_file = $ana->{config}->{script_dir} . $script;
 require $script_file;
 eval { batch($ana) };
+
+# エラー
 if ($@) {
     print "$@";
     my $backup_file = 'backup' . time();

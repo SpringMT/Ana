@@ -2,7 +2,6 @@ package Ana::Input::File;
 use strict;
 use warnings;
 use Carp;
-use lib '/Users/haruyama.makoto/Ana/lib';
 use parent 'Ana::Input';
 
 sub set_data {
